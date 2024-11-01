@@ -30,7 +30,7 @@ const Menu = () => {
     <div
       className="rounded-r-lg bg-gradient-to-b from-yellow-400 via-yellow-300 
     via-yellow-200 via-green-400 via-green-300 via-blue-500 to-green-500
-    flex flex-col items-start w-[18%] h-full"
+    flex flex-col items-start w-[18%] "
     >
       <div className="flex flex-row w-full justify-center p-8">
         <p className="font-bold text-xl">Menu</p>

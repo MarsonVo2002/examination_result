@@ -1,8 +1,19 @@
-import React from 'react'
-import { mockData } from '../Utils/mockData';
+import React from "react";
+import { mockData } from "../Utils/mockData";
 import Chart from "react-apexcharts";
-function calculateScoreGroups  (data) {
-  const subjects = ["toan", "ngu_van", "ngoai_ngu", "vat_li", "hoa_hoc", "sinh_hoc", "lich_su", "dia_li", "gdcd"];
+import { subjects } from "../Utils/Subjects";
+function calculateScoreGroups(data) {
+  const subjects = [
+    "toan",
+    "ngu_van",
+    "ngoai_ngu",
+    "vat_li",
+    "hoa_hoc",
+    "sinh_hoc",
+    "lich_su",
+    "dia_li",
+    "gdcd",
+  ];
   const scoreGroups = {
     ">=8": {},
     "6-7.99": {},
@@ -28,7 +39,7 @@ function calculateScoreGroups  (data) {
   });
 
   return scoreGroups;
-};
+}
 const Report = () => {
   const groupedData = calculateScoreGroups(mockData);
 
@@ -40,9 +51,16 @@ const Report = () => {
     plotOptions: {
       bar: {
         horizontal: false,
-        borderRadius: 4,
+        borderRadius: 0,
+        columnWidth: "25%",
+        borderRadiusApplication: "end",
+        borderRadiusWhenStacked: "last",
       },
     },
+    dataLabels: {
+      enabled: false,
+    },
+
     xaxis: {
       categories: Object.keys(groupedData[">=8"]),
       title: {
@@ -56,6 +74,14 @@ const Report = () => {
     },
     legend: {
       position: "top",
+      horizontalAlign: "left",
+      fontFamily: "Satoshi",
+      fontWeight: 500,
+      fontSize: "14px",
+
+      markers: {
+        radius: 99,
+      },
     },
   };
 
@@ -79,10 +105,48 @@ const Report = () => {
   ];
 
   return (
-    <div className="p-4 bg-white shadow-lg rounded-xl">
-      <h2 className="text-center text-2xl font-bold mb-4">Student Score Distribution by Subject</h2>
-      <Chart options={chartOptions} series={chartSeries} type="bar" height={400} />
-    </div>)
-}
+    <div className="flex flex-col w-[90%] p-10 space-y-8">
+      <div className="p-10 shadow-lg bg-white rounded">
+        <h2 className="text-center text-2xl font-bold mb-4">
+          Student Score Distribution by Subject
+        </h2>
+        <Chart
+          options={chartOptions}
+          series={chartSeries}
+          type="bar"
+          height={400}
+        />
+      </div>
+      <div>
+        <div>
+          <div className="w-full overflow-auto">
+            <div className="grid grid-cols-11 bg-gray-100 border border-gray-300 text-center p-4 font-bold">
+              {subjects.map((subject) => (
+                <div>{subject.name}</div>
+              ))}
+            </div>
+           
+              {mockData.map((subject) => (
+                <div className="grid grid-cols-3 sm:grid-cols-6 md:grid-cols-11 bg-white border border-gray-300 text-center p-4">
+                  <div>{subject.sbd}</div>
+                  <div>{subject.toan ?? "-"}</div>
+                  <div>{subject.ngu_van ?? "-"}</div>
+                  <div>{subject.ngoai_ngu ?? "-"}</div>
+                  <div>{subject.vat_li ?? "-"}</div>
+                  <div>{subject.hoa_hoc ?? "-"}</div>
+                  <div>{subject.sinh_hoc ?? "-"}</div>
+                  <div>{subject.lich_su ?? "-"}</div>
+                  <div>{subject.dia_li ?? "-"}</div>
+                  <div>{subject.gdcd ?? "-"}</div>
+                  <div>{subject.ma_ngoai_ngu ?? "-"}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+  
+  );
+};
 
-export default Report
+export default Report;

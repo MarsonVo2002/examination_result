@@ -10,9 +10,9 @@ function App() {
     <div>
       <Router>
         <Header />
-        <div className="flex flex-row w-screen h-screen">
+        <div className="flex flex-row w-full h-full">
           <Menu />
-          <div className="w-full flex flex-col items-center bg-gray-100">
+          <div className="w-full h-full flex flex-col items-center bg-gray-100">
             <Routes>
               <Route path="/" element={<Dashboard/>}></Route>
               <Route path="/report" element={<Report />}></Route>
