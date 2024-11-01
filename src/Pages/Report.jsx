@@ -1,108 +1,101 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { mockData } from "../Utils/mockData";
 import Chart from "react-apexcharts";
 import { subjects } from "../Utils/Subjects";
-function calculateScoreGroups(data) {
-  const subjects = [
-    "toan",
-    "ngu_van",
-    "ngoai_ngu",
-    "vat_li",
-    "hoa_hoc",
-    "sinh_hoc",
-    "lich_su",
-    "dia_li",
-    "gdcd",
-  ];
-  const scoreGroups = {
-    ">=8": {},
-    "6-7.99": {},
-    "4-5.99": {},
-    "<4": {},
-  };
+import axios from "axios";
 
-  subjects.forEach((subject) => {
-    scoreGroups[">=8"][subject] = 0;
-    scoreGroups["6-7.99"][subject] = 0;
-    scoreGroups["4-5.99"][subject] = 0;
-    scoreGroups["<4"][subject] = 0;
-
-    data.forEach((student) => {
-      const score = student[subject];
-      if (score !== null && score !== undefined) {
-        if (score >= 8) scoreGroups[">=8"][subject]++;
-        else if (score >= 6) scoreGroups["6-7.99"][subject]++;
-        else if (score >= 4) scoreGroups["4-5.99"][subject]++;
-        else scoreGroups["<4"][subject]++;
-      }
-    });
-  });
-
-  return scoreGroups;
-}
 const Report = () => {
-  const groupedData = calculateScoreGroups(mockData);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/students/feature-report"
+        );
+        console.log(response.data);
+        const subjects = Object.keys(response.data);
+        console.log(subjects);
+        const excellentData = subjects.map(
+          (subject) => response.data[subject]?.Excellent || 0
+        );
+        const goodData = subjects.map(
+          (subject) => response.data[subject]?.Good || 0
+        );
+        const averageData = subjects.map(
+          (subject) => response.data[subject]?.Average || 0
+        );
+        const poorData = subjects.map(
+          (subject) => response.data[subject]?.Poor || 0
+        );
+        console.log(excellentData);
+        setChartData({
+          series: [
+            { name: "Excellent", data: excellentData },
+            { name: "Good", data: goodData },
+            { name: "Average", data: averageData },
+            { name: "Poor", data: poorData },
+          ],
+          options: {
+            xaxis: {
+              categories: subjects,
+            },
+          },
+        });
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
-  const chartOptions = {
-    chart: {
-      type: "bar",
-      stacked: true,
-    },
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        borderRadius: 0,
-        columnWidth: "25%",
-        borderRadiusApplication: "end",
-        borderRadiusWhenStacked: "last",
+    fetchData();
+  }, []);
+  const [chartData, setChartData] = useState({
+    series: [
+      { name: "Excellent", data: [] },
+      { name: "Good", data: [] },
+      { name: "Average", data: [] },
+      { name: "Poor", data: [] },
+    ],
+    options: {
+      chart: {
+        type: "bar",
+        stacked: true,
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          borderRadius: 0,
+          columnWidth: "25%",
+          borderRadiusApplication: "end",
+          borderRadiusWhenStacked: "last",
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+
+      xaxis: {
+        categories: [],
+        title: {
+          text: "Subjects",
+        },
+      },
+      yaxis: {
+        title: {
+          text: "Number of Students",
+        },
+      },
+      legend: {
+        position: "top",
+        horizontalAlign: "left",
+        fontFamily: "Satoshi",
+        fontWeight: 500,
+        fontSize: "14px",
+
+        markers: {
+          radius: 99,
+        },
       },
     },
-    dataLabels: {
-      enabled: false,
-    },
-
-    xaxis: {
-      categories: Object.keys(groupedData[">=8"]),
-      title: {
-        text: "Subjects",
-      },
-    },
-    yaxis: {
-      title: {
-        text: "Number of Students",
-      },
-    },
-    legend: {
-      position: "top",
-      horizontalAlign: "left",
-      fontFamily: "Satoshi",
-      fontWeight: 500,
-      fontSize: "14px",
-
-      markers: {
-        radius: 99,
-      },
-    },
-  };
-
-  const chartSeries = [
-    {
-      name: ">= 8",
-      data: Object.values(groupedData[">=8"]),
-    },
-    {
-      name: "6 - 7.99",
-      data: Object.values(groupedData["6-7.99"]),
-    },
-    {
-      name: "4 - 5.99",
-      data: Object.values(groupedData["4-5.99"]),
-    },
-    {
-      name: "< 4",
-      data: Object.values(groupedData["<4"]),
-    },
-  ];
+  });
 
   return (
     <div className="flex flex-col w-[90%] p-10 space-y-8">
@@ -111,8 +104,8 @@ const Report = () => {
           Student Score Distribution by Subject
         </h2>
         <Chart
-          options={chartOptions}
-          series={chartSeries}
+          options={chartData.options}
+          series={chartData.series}
           type="bar"
           height={400}
         />
@@ -125,27 +118,26 @@ const Report = () => {
                 <div>{subject.name}</div>
               ))}
             </div>
-           
-              {mockData.map((subject) => (
-                <div className="grid grid-cols-3 sm:grid-cols-6 md:grid-cols-11 bg-white border border-gray-300 text-center p-4">
-                  <div>{subject.sbd}</div>
-                  <div>{subject.toan ?? "-"}</div>
-                  <div>{subject.ngu_van ?? "-"}</div>
-                  <div>{subject.ngoai_ngu ?? "-"}</div>
-                  <div>{subject.vat_li ?? "-"}</div>
-                  <div>{subject.hoa_hoc ?? "-"}</div>
-                  <div>{subject.sinh_hoc ?? "-"}</div>
-                  <div>{subject.lich_su ?? "-"}</div>
-                  <div>{subject.dia_li ?? "-"}</div>
-                  <div>{subject.gdcd ?? "-"}</div>
-                  <div>{subject.ma_ngoai_ngu ?? "-"}</div>
-                </div>
-              ))}
-            </div>
+
+            {mockData.map((subject) => (
+              <div className="grid grid-cols-3 sm:grid-cols-6 md:grid-cols-11 bg-white border border-gray-300 text-center p-4">
+                <div>{subject.sbd}</div>
+                <div>{subject.toan ?? "-"}</div>
+                <div>{subject.ngu_van ?? "-"}</div>
+                <div>{subject.ngoai_ngu ?? "-"}</div>
+                <div>{subject.vat_li ?? "-"}</div>
+                <div>{subject.hoa_hoc ?? "-"}</div>
+                <div>{subject.sinh_hoc ?? "-"}</div>
+                <div>{subject.lich_su ?? "-"}</div>
+                <div>{subject.dia_li ?? "-"}</div>
+                <div>{subject.gdcd ?? "-"}</div>
+                <div>{subject.ma_ngoai_ngu ?? "-"}</div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
-  
+    </div>
   );
 };
 
