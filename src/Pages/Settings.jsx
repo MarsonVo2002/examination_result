@@ -2,7 +2,7 @@ import React from 'react'
 
 const Settings = () => {
   return (
-    <div className='min-h-screen'>Settings</div>
+    <div className='min-h-screen'></div>
   )
 }
 

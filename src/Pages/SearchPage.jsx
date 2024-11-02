@@ -5,10 +5,11 @@ import { subjects } from "../Utils/Subjects";
 import axios from "axios";
 const SearchPage = () => {
   const [registrationNumber, setRegistrationNumber] = useState("");
+  const [error, setError] = useState(false);
   const handleInputChange = (e) => {
     setRegistrationNumber(e.target.value);
   };
-  const handleSubmit = async() => {
+  const handleSubmit = async () => {
     console.log(registrationNumber);
     try {
       const response = await axios.get(
@@ -16,8 +17,10 @@ const SearchPage = () => {
       );
       console.log(response.data);
       setResult(response.data);
+      setError(false);
     } catch (error) {
       setResult(null);
+      setError(true)
     }
   };
   const [data, setData] = useState([]);
@@ -27,24 +30,27 @@ const SearchPage = () => {
   }, []);
   return (
     <div className="flex flex-col w-full p-10 space-y-8 min-h-screen">
-      <div className="flex flex-col p-10 shadow-lg bg-white space-y-4 rounded">
+      <div className="flex flex-col p-10 shadow-lg bg-white space-y-4 rounded sm:text-[9px] lg:text-[16px] text-[8px]">
         <h2 className="font-bold text-2xl">User Registration</h2>
-        <div className="flex flex-col space-y-2">
-          <p>Registration Number:</p>
-          <div className="flex flex-row space-x-2">
-            <input
-              className="p-2 w-[70%] border-2 rounded"
-              placeholder="Enter registration number"
-              value={registrationNumber}
-              onChange={handleInputChange}
-            ></input>
-            <button
-              className="py-2 px-6 bg-black text-white rounded"
-              onClick={handleSubmit}
-            >
-              Submit
-            </button>
+        <div>
+          <div className="flex flex-col space-y-2">
+            <p>Registration Number:</p>
+            <div className="flex flex-row space-x-2">
+              <input
+                className="p-2 w-[70%] border-2 rounded"
+                placeholder="Enter registration number"
+                value={registrationNumber}
+                onChange={handleInputChange}
+              ></input>
+              <button
+                className="py-2 px-6 bg-black text-white rounded"
+                onClick={handleSubmit}
+              >
+                Submit
+              </button>
+            </div>
           </div>
+          {error && (<p className="text-red-600">No result found</p>)}
         </div>
       </div>
       <div className="flex flex-col p-10 shadow-lg bg-white space-y-4 rounded">

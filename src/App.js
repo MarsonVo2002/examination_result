@@ -10,7 +10,7 @@ function App() {
     <div>
       <Router>
         <Header />
-        <div className="flex flex-row w-full h-full">
+        <div className="flex flex-row w-full h-full min-w-[640px]">
           <Menu />
           <div className="w-full h-full flex flex-col items-center bg-gray-100">
             <Routes>

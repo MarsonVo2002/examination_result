@@ -30,12 +30,12 @@ const Menu = () => {
     <div
       className="rounded-r-lg bg-gradient-to-b from-yellow-400 via-yellow-300 
     via-yellow-200 via-green-400 via-green-300 via-blue-500 to-green-500
-    flex flex-col items-start w-[18%] "
+    flex flex-col items-start w-[18%] min-w-[120px]"
     >
       <div className="flex flex-row w-full justify-center p-8">
         <p className="font-bold lg:text-xl sm:text-sm text-sm">Menu</p>
       </div>
-      <div className="ml-4 flex flex-col items-start space-y-8 sm:text-xs text-xs">
+      <div className="ml-4 flex flex-col items-start space-y-8 sm:text-xs xl:text-[18px] text-xs">
         <button
           className={`${dashboard ? "font-bold" : "font-medium"}`}
           onClick={()=>handleClick("dashboard")}

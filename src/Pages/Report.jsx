@@ -64,6 +64,19 @@ const Report = () => {
         type: "bar",
         stacked: true,
       },
+      responsive: [
+        {
+          breakpoint: 320,
+          options: {
+            plotOptions: {
+              bar: {
+                borderRadius: 0,
+                columnWidth: '25%',
+              },
+            },
+          },
+        },
+      ],
       plotOptions: {
         bar: {
           horizontal: false,
@@ -104,7 +117,7 @@ const Report = () => {
   });
 
   return (
-    <div className="flex flex-col w-[90%] p-10 space-y-8">
+    <div className="flex flex-col w-[90%] p-10 space-y-8 sm:text-[9px] lg:text-[16px] text-[8px]">
       <div className="p-10 shadow-lg bg-white rounded">
         <h2 className="text-center text-2xl font-bold mb-4">
           Student Score Distribution by Subject
@@ -119,7 +132,7 @@ const Report = () => {
       <div>
         <div>
           <div className="w-full overflow-auto">
-            <div className="grid sm:text-[9px] lg:text-[16px] text-[8px] grid-cols-11 bg-gray-100 border border-gray-300 text-center p-4 font-bold">
+            <div className="grid sm:text-[9px] lg:text-[16px] text-[8px] 2-xl-text-[18px] grid-cols-11 bg-gray-100 border border-gray-300 text-center p-4 font-bold">
               {subjects.map((subject) => (
                 <div>{subject.name}</div>
               ))}
