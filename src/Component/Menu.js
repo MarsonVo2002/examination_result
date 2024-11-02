@@ -33,9 +33,9 @@ const Menu = () => {
     flex flex-col items-start w-[18%] "
     >
       <div className="flex flex-row w-full justify-center p-8">
-        <p className="font-bold text-xl">Menu</p>
+        <p className="font-bold lg:text-xl sm:text-sm text-sm">Menu</p>
       </div>
-      <div className="ml-4 flex flex-col items-start space-y-8 ">
+      <div className="ml-4 flex flex-col items-start space-y-8 sm:text-xs text-xs">
         <button
           className={`${dashboard ? "font-bold" : "font-medium"}`}
           onClick={()=>handleClick("dashboard")}

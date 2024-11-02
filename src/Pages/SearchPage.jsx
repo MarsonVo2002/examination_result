@@ -2,18 +2,21 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { mockData } from "../Utils/mockData";
 import { subjects } from "../Utils/Subjects";
+import axios from "axios";
 const SearchPage = () => {
   const [registrationNumber, setRegistrationNumber] = useState("");
   const handleInputChange = (e) => {
     setRegistrationNumber(e.target.value);
   };
-  const handleSubmit = () => {
+  const handleSubmit = async() => {
     console.log(registrationNumber);
-    const temp = data.find((item) => item.sbd === registrationNumber);
-    if (temp !== undefined) {
-      console.log(temp);
-      setResult(temp);
-    } else {
+    try {
+      const response = await axios.get(
+        `https://g-scores-1.onrender.com/students/${registrationNumber}`
+      );
+      console.log(response.data);
+      setResult(response.data);
+    } catch (error) {
       setResult(null);
     }
   };
@@ -23,7 +26,7 @@ const SearchPage = () => {
     setData(mockData);
   }, []);
   return (
-    <div className="flex flex-col w-[90%] p-10 space-y-8 min-h-screen">
+    <div className="flex flex-col w-full p-10 space-y-8 min-h-screen">
       <div className="flex flex-col p-10 shadow-lg bg-white space-y-4 rounded">
         <h2 className="font-bold text-2xl">User Registration</h2>
         <div className="flex flex-col space-y-2">
@@ -54,12 +57,12 @@ const SearchPage = () => {
           ) : (
             <div>
               <div className="w-full overflow-auto">
-                <div className="grid grid-cols-11 bg-gray-100 border border-gray-300 text-center p-4 font-bold">
+                <div className="sm:text-[9px] lg:text-[16px] text-[8px] grid grid-cols-11 bg-gray-100 border border-gray-300 text-center p-4 font-bold">
                   {subjects.map((subject) => (
                     <div>{subject.name}</div>
                   ))}
                 </div>
-                <div className="grid grid-cols-3 sm:grid-cols-6 md:grid-cols-11 bg-white border border-gray-300 text-center p-4">
+                <div className="grid lg:text-[14px] sm:text-[8px] text-[7px] grid-cols-11 bg-white border border-gray-300 text-center p-4">
                   <div>{result.sbd}</div>
                   <div>{result.toan ?? "-"}</div>
                   <div>{result.ngu_van ?? "-"}</div>

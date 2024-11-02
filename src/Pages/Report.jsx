@@ -9,9 +9,13 @@ const Report = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/students/feature-report"
+          "https://g-scores-1.onrender.com/students/feature-report"
         );
-        console.log(response.data);
+        const response1 = await axios.get(
+          "https://g-scores-1.onrender.com/students/top-ten"
+        );
+        console.log(response1.data);
+        setTopTen(response1.data);
         const subjects = Object.keys(response.data);
         console.log(subjects);
         const excellentData = subjects.map(
@@ -47,6 +51,7 @@ const Report = () => {
 
     fetchData();
   }, []);
+  const [topten, setTopTen] = useState([]);
   const [chartData, setChartData] = useState({
     series: [
       { name: "Excellent", data: [] },
@@ -81,6 +86,7 @@ const Report = () => {
       yaxis: {
         title: {
           text: "Number of Students",
+         
         },
       },
       legend: {
@@ -113,14 +119,14 @@ const Report = () => {
       <div>
         <div>
           <div className="w-full overflow-auto">
-            <div className="grid grid-cols-11 bg-gray-100 border border-gray-300 text-center p-4 font-bold">
+            <div className="grid sm:text-[9px] lg:text-[16px] text-[8px] grid-cols-11 bg-gray-100 border border-gray-300 text-center p-4 font-bold">
               {subjects.map((subject) => (
                 <div>{subject.name}</div>
               ))}
             </div>
 
-            {mockData.map((subject) => (
-              <div className="grid grid-cols-3 sm:grid-cols-6 md:grid-cols-11 bg-white border border-gray-300 text-center p-4">
+            {topten.map((subject) => (
+              <div className="grid lg:text-[14px] sm:text-[8px] text-[7px] grid-cols-11 bg-white border border-gray-300 text-center p-4">
                 <div>{subject.sbd}</div>
                 <div>{subject.toan ?? "-"}</div>
                 <div>{subject.ngu_van ?? "-"}</div>
